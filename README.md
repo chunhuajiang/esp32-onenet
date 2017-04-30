@@ -9,7 +9,8 @@ ESP32 通过 MQTT 连接到中国移动物联网云平台 ONENET
 
 - [x] 连接鉴权
 - [x] 心跳包
-- [ ] 数据上报(QoS0, QoS1, Qos2)
+- [x] 数据上报(QoS0)
+- [ ] 数据上报(QoS1, Qos2)
 - [ ] 平台命令处理(QoS0, QoS1, Qos2)
 - [ ] 创建 Topic
 - [ ] 订阅

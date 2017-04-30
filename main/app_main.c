@@ -24,27 +24,78 @@
 #include "debug.h"
 
 #include "mqtt.h"
+#include "os.h"
+#include "onenet.h"
 
+static bool onenet_initialised = false;
+static TaskHandle_t xOneNetTask = NULL;
+
+void onenet_task(void *param)
+{
+   mqtt_client* client = (mqtt_client *)param;
+   uint32_t val;
+
+   while(1) {
+        /**
+         * Replace this *val* with real captured value by your sensor,
+         * Here, we just use a rand number which ranges form 15 to 35. 
+         */
+        val = os_random() % 20 + 15;
+
+        char buf[128];
+        memset(buf, 0, sizeof(buf));
+        sprintf(&buf[3], "{\"%s\":%d}", ONENET_DATA_STREAM, val);
+        uint16_t len = strlen(&buf[3]);
+        buf[0] = data_type_simple_json_without_time;
+        buf[1] = len >> 8;
+        buf[2] = len & 0xFF;
+        mqtt_publish(client, "$dp", buf, len + 3, 0, 0);
+    
+        vTaskDelay((unsigned long long)ONENET_PUB_INTERVAL* 1000 / portTICK_RATE_MS);
+   }
+}
+
+
+void onenet_start(mqtt_client *client)
+{
+    if(!onenet_initialised) {
+        xTaskCreate(&onenet_task, "onenet_task", 2048, client, CONFIG_MQTT_PRIORITY + 1, &xOneNetTask);
+        onenet_initialised = true;
+    }
+}
+
+void onenet_stop(mqtt_client *client)
+{
+    if(onenet_initialised) {
+        if(xOneNetTask) {
+            vTaskDelete(xOneNetTask);
+        }
+        onenet_initialised = false;
+    }
+}
 
 void connected_cb(void *self, void *params)
 {
     mqtt_client *client = (mqtt_client *)self;
-    mqtt_subscribe(client, "/test", 0);
-    mqtt_publish(client, "/test", "howdy!", 6, 0, 0);
+    //mqtt_subscribe(client, "/test", 0);
+    //mqtt_publish(client, "/test", "howdy!", 6, 0, 0);
+    onenet_start(client);
 }
 void disconnected_cb(void *self, void *params)
 {
-
+     mqtt_client *client = (mqtt_client *)self;
+     onenet_stop(client);
 }
 void reconnect_cb(void *self, void *params)
 {
-
+    mqtt_client *client = (mqtt_client *)self;
+    onenet_start(client);
 }
 void subscribe_cb(void *self, void *params)
 {
     INFO("[APP] Subscribe ok, test publish msg\n");
     mqtt_client *client = (mqtt_client *)self;
-    mqtt_publish(client, "/test", "abcde", 5, 0, 0);
+    //mqtt_publish(client, "/test", "abcde", 5, 0, 0);
 }
 
 void publish_cb(void *self, void *params)
