@@ -21,19 +21,25 @@ ESP32 通过 MQTT 连接到中国移动物联网云平台 ONENET
 
 ## 快速体验
 
-如果你已对oneNET有一定的了解，则可以按照下面的步骤快速体验。
+如果你已对oneNET有一定的了解，且能够使用 ESP-IDF 编译 hello-world，则可以按照下面的步骤快速体验。
 
 - 登录oneNET，依次创建产品，添加设备，设置鉴权信息。记录下产品ID、设备ID和鉴权信息。
+- 创建一个数据流，并记录下该数据流的名称。
 - 修改本仓库源代码目录下的`config.h`文件，主要包括：
   - `WIFI_SSID` - esp32需要连接到的AP的ssid。
   - `WIFI_PASS` - esp32需要连接到的AP的密码。
   - `ONENET_DEVICE_ID` - 云平台所创建设备的设备ID。
   - `ONENET_PROJECT_ID` - 云平台所创建的产品的产品ID。
   - `ONENET_AUTH_INFO` - 自己设置的鉴权信息。
+  - `ONENET_DATA_STREAM` - 自己所创建的数据流的名称。
 - 编译工程：
   - 指定 ESP-IDF 所在路径：`export IDF_PATH=/你的/ESP/IDF/所在的/路径`。
   - 编译&烧写：`make & make flash`
 
-## 详细说明
+## 详细步骤
 
 即将上映...
+
+## 说明
+
+当前仓库中代码所上传的数据是**假数据** —— 一个 15~35 之间的随机数，在实际应用中可添加传感器，并将其采集到的数据上传至云平台。
