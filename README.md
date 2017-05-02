@@ -3,6 +3,8 @@ ESP32 通过 MQTT 连接到中国移动物联网云平台 OneNET
 
 应用展示 - [https://open.iot.10086.cn/appview/p/1c77653399eb0cdde908b7e1faf1c1aa](https://open.iot.10086.cn/appview/p/1c77653399eb0cdde908b7e1faf1c1aa)
 
+![](doc/img/preview.jpg)
+
 ## 子模块
 
 [ESP32 MQTT 组件库](https://github.com/tidyjiang8/espmqtt)
