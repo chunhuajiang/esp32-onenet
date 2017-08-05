@@ -50,6 +50,11 @@ void onenet_task(void *param)
         buf[1] = len >> 8;
         buf[2] = len & 0xFF;
         mqtt_publish(client, "$dp", buf, len + 3, 0, 0);
+
+		for (int i = 0 ; i < len + 3; i ++){
+			printf("0x%02x ", buf[i]);
+		}
+		printf(", len:%d\n", len+3);
     
         vTaskDelay((unsigned long long)ONENET_PUB_INTERVAL* 1000 / portTICK_RATE_MS);
    }
